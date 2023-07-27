@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { StyleSheet, Text, TextInput, Image, Button, ScrollView, SafeAreaView, View } from 'react-native';
+import { StyleSheet, Text, TextInput, Image, Button, View } from 'react-native';
 import { AuthContext } from '../App';
 
 module.exports = {

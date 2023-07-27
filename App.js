@@ -7,14 +7,16 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import React from 'react';
-import { useState, useEffect, createContext, useContext } from 'react';
+import { useState, createContext } from 'react';
 
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, TextInput, Image, Button, ScrollView, SafeAreaView, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const Login = require('./apps/LoginScreen');
 const Landing = require('./apps/LandingScreen');
 const Home = require('./apps/HomeScreen');
+const Search = require('./apps/SearchScreen');
+const Friend = require('./apps/FriendScreen')
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -29,55 +31,6 @@ async function authenticate() {
   });
 
   const json = await response.json();
-}
-
-const SearchScreen = () => {
-  const [search, setSearch] = React.useState("");
-  const [companies, setCompanies] = React.useState([]);
-
-  useEffect(() => {
-    fetch('https://www.21-trading.com/search/' + search.toUpperCase(), {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      }
-    })
-      .then(response => response.json())
-      .then(async (response) => {
-        setCompanies(response);
-      }).catch(error => { });
-  }, [search]);
-
-  return (
-    <View style={styles.container}>
-      <View>
-        <Text style={{ fontSize: 10 }}>Search</Text>
-        <TextInput style={styles.input} onChangeText={setSearch}
-          placeholder={"Search for companies"} />
-      </View>
-
-      <ScrollView style={{ width: "100%", marginTop: 32 }}>
-        {companies.map((stock) => {
-          return (
-            <View style={{ borderColor: "#475569", margin: 8, borderRadius: 5, borderWidth: 1 }}>
-              <Text style={{ backgroundColor: "#10b981", fontSize: 20 }}>{stock["Symbol"]}</Text>
-              <Text style={{ fontSize: 20 }}>{stock["Company Name"]}</Text>
-              <Text style={{ fontSize: 16 }}>{stock["Industry"]}</Text>
-            </View>
-          );
-        })}
-      </ScrollView>
-    </View>
-  );
-}
-
-const FriendScreen = () => {
-  return (
-    <View>
-      <Text>Friends Screen!</Text>
-    </View>
-  );
 }
 
 export const AuthContext = createContext();
@@ -115,8 +68,8 @@ export default function App() {
               }, tabBarActiveTintColor: '#22c55e', tabBarInactiveTintColor: 'gray',
             })}>
             <Tab.Screen name="Home" component={Home.screen} />
-            <Tab.Screen name="Search" component={SearchScreen} />
-            <Tab.Screen name="Friends" component={FriendScreen} />
+            <Tab.Screen name="Search" component={Search.screen} />
+            <Tab.Screen name="Friends" component={Friend.screen} />
           </Tab.Navigator>
         )
           :
