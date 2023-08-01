@@ -1,25 +1,21 @@
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import React from 'react';
 import { useState, createContext } from 'react';
 
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet } from 'react-native';
+import { styles } from './Style';
 
-const Login = require('./apps/LoginScreen');
-const Landing = require('./apps/LandingScreen');
-const Home = require('./apps/HomeScreen');
-const Search = require('./apps/SearchScreen');
-const Friend = require('./apps/FriendScreen')
+import { AuthContext, Tab, Stack } from './Context'
 
-const Tab = createBottomTabNavigator();
-const Stack = createNativeStackNavigator();
+const Login = require('./pages/Login');
+const Landing = require('./pages/Landing');
+const Home = require('./pages/Home');
+const Search = require('./pages/Search');
+const Friends = require('./pages/Friends');
 
 async function authenticate() {
   const response = await fetch('https://www.21-trading.com/api/get-shares', {
@@ -32,8 +28,6 @@ async function authenticate() {
 
   const json = await response.json();
 }
-
-export const AuthContext = createContext();
 
 export default function App() {
   const [signedIn, setSignedIn] = useState(false);
@@ -51,7 +45,7 @@ export default function App() {
       />
       <NavigationContainer>
 
-        {(signedIn) ? (
+      {(signedIn) ? (
           <Tab.Navigator
             screenOptions={({ route }) => ({
               tabBarIcon: ({ focused, color, size }) => {
@@ -67,36 +61,19 @@ export default function App() {
 
               }, tabBarActiveTintColor: '#22c55e', tabBarInactiveTintColor: 'gray',
             })}>
-            <Tab.Screen name="Home" component={Home.screen} />
-            <Tab.Screen name="Search" component={Search.screen} />
-            <Tab.Screen name="Friends" component={Friend.screen} />
+            <Tab.Screen name="Home" component={Home.Screen} />
+            <Tab.Screen name="Search" component={Search.Screen} />
+            <Tab.Screen name="Friends" component={Friends.Screen} />
           </Tab.Navigator>
         )
           :
           (<Stack.Navigator>
-            <Stack.Screen name="Landing" component={Landing.screen} />
-            <Stack.Screen name="Login" component={Login.screen} />
-            <Stack.Screen name="Home" component={Home.screen} />
+            <Stack.Screen name="Landing" component={Landing.Screen} />
+            <Stack.Screen name="Login" component={Login.Screen} />
+            <Stack.Screen name="Home" component={Home.Screen} />
           </Stack.Navigator>)}
+     
       </NavigationContainer>
     </AuthContext.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  input: {
-    borderBottomWidth: 1, borderColor: "#1e293b", width: 300,
-    padding: 4,
-  },
-
-  logo: {
-    width: 200, height: 50,
-  },
-
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'top',
-  },
-});
